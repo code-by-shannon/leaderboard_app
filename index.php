@@ -44,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Start session for this user
         $_SESSION['user_id'] = $userId;
         $_SESSION['user_name'] = $name;
+        
+        $_SESSION['is_returning'] = $found;
 
         $conn->close();
 

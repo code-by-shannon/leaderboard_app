@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
 }
 
 $userName = $_SESSION['user_name'];
+$isReturning = $_SESSION['is_returning'] ?? false;
 ?>
 
 <!DOCTYPE html>
@@ -19,10 +20,20 @@ $userName = $_SESSION['user_name'];
     <title>Welcome</title>
 </head>
 <body>
-<nav><ul>
-    <li><a href="index.php">index.php</a></li>
-</ul></nav>
-<h1>Welcome <?= htmlspecialchars($userName) ?></h1>
+<nav>
+    <ul>
+        <li><a href="index.php">index.php</a></li>
+        <li><a href="logout.php">Exit User</a></li>
+    </ul>
+</nav>
+
+<h1>
+    <?= $isReturning
+        ? "Welcome back " . htmlspecialchars($userName)
+        : "Welcome " . htmlspecialchars($userName)
+    ?>
+</h1>
+
 
 </body>
 </html>
