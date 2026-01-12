@@ -34,6 +34,7 @@ $isReturning = $_SESSION['is_returning'] ?? false;
     ?>
 </h1>
 
+<p><a href="driver_recruit.php">Recruit / view your drivers</a></p>
 
 </body>
 </html>
