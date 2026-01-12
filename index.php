@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->close();
 
         // Go to confirmation page
-        header("Location: thankyou.php");
+        header("Location: dashboard.php");
         exit;
     }
 }
@@ -57,28 +57,33 @@ $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>SCLR 2.0 – Choose User</title>
 </head>
+
 <body>
 
-<h1>Create or Choose User</h1>
+    <h1>Welcome to my fancy ass Leaderboard App</h1>
 
-<?php if ($error): ?>
-    <p style="color:red;"><?= htmlspecialchars($error) ?></p>
-<?php endif; ?>
 
-<form method="post">
-    <label>
-        Enter or create a user name:
-        <br>
-        <input type="text" name="name" required>
-    </label>
-    <br><br>
-    <button type="submit">Continue</button>
-</form>
+    <p>Already have a username? Type it in and go</p>
+    <p>Are you a new to the app? Please create a usern</p>
+    <?php if ($error) : ?>
+        <p style="color:red;"><?= htmlspecialchars($error) ?></p>
+    <?php endif; ?>
+
+    <form method="post">
+        <label>
+            username
+            <br>
+            <input type="text" name="name" required>
+        </label>
+        <br><br>
+        <button type="submit">Continue</button>
+    </form>
 
 </body>
-</html>
 
+</html>

@@ -19,8 +19,10 @@ $userName = $_SESSION['user_name'];
     <title>Welcome</title>
 </head>
 <body>
-
-<h1>Active user: <?= htmlspecialchars($userName) ?></h1>
+<nav><ul>
+    <li><a href="index.php">index.php</a></li>
+</ul></nav>
+<h1>Welcome <?= htmlspecialchars($userName) ?></h1>
 
 </body>
 </html>
