@@ -67,11 +67,11 @@ $conn->close();
 
 <body>
 
-    <h1>Welcome to my fancy ass Leaderboard App</h1>
+    <h1>Welcome to your personalized Leaderboard App</h1>
 
 
     <p>Already have a username? Type it in and go</p>
-    <p>Are you a new to the app? Please create a usern</p>
+    <p>Are you a new to the app? Please create a username</p>
     <?php if ($error) : ?>
         <p style="color:red;"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>

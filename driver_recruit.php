@@ -28,6 +28,21 @@ if ($conn->connect_error) {
 $error = '';
 $pilotName = '';
 
+// ---- HANDLE DELETE ----
+if ($_SERVER['REQUEST_METHOD'] === 'POST'
+    && isset($_POST['delete_pilot_id'])) 
+{
+    $pilotId = (int)$_POST['delete_pilot_id'];
+
+    $stmt = $conn->prepare(
+        "DELETE FROM pilots WHERE id = ? AND user_id = ?"
+    );
+    $stmt->bind_param("ii", $pilotId, $userId);
+    $stmt->execute();
+    $stmt->close();
+}
+
+// ---- HANDLE INSERT ----
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pilotName = trim($_POST['pilot_name'] ?? '');
 
@@ -44,6 +59,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pilotName = ''; // clear after insert
     }
 }
+
+// ---- FETCH USER PILOTS ----
+$pilots = [];
+
+$stmt = $conn->prepare(
+    "SELECT id, name FROM pilots WHERE user_id = ? ORDER BY id ASC"
+);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $pilots[] = $row;
+}
+
+$stmt->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -80,6 +112,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button type="submit">Add Pilot</button>
 </form>
 <?php $conn->close(); ?>
+
+<?php if (!empty($pilots)): ?>
+    <h2>Your Pilots</h2>
+
+    <table border="1" cellpadding="6">
+        <thead>
+            <tr>
+                <th>Pilot Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($pilots as $pilot): ?>
+            <tr>
+                <td><?= htmlspecialchars($pilot['name']) ?></td>
+                <td>
+                    <form method="post" style="display:inline;">
+                        <input type="hidden" name="delete_pilot_id"
+                               value="<?= $pilot['id'] ?>">
+                        <button type="submit"
+                                onclick="return confirm('Delete this pilot?')">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
 
 </body>
 </html>
