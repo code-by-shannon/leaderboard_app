@@ -28,7 +28,7 @@ if ($conn->connect_error) {
 
 $error = '';
 
-// ---- HANDLE DELETE ----
+// ---- HANDLE DELETE SEASON----
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_season_id'])) {
     $seasonId = (int)$_POST['delete_season_id'];
 
@@ -122,19 +122,24 @@ $stmt->close();
         <tbody>
         <?php foreach ($seasons as $season): ?>
             <tr>
-                <td><?= htmlspecialchars($season['name']) ?></td>
-                <td>
-                    <form method="post" style="display:inline;">
-                        <input type="hidden"
-                               name="delete_season_id"
-                               value="<?= $season['id'] ?>">
-                        <button type="submit"
-                                onclick="return confirm('Delete this season?')">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
+    <td>
+        <a href="season_details.php?season_id=<?= $season['id'] ?>">
+            <?= htmlspecialchars($season['name']) ?>
+        </a>
+    </td>
+    <td>
+        <form method="post" style="display:inline;">
+            <input type="hidden"
+                   name="delete_season_id"
+                   value="<?= $season['id'] ?>">
+            <button type="submit"
+                    onclick="return confirm('Delete this season?')">
+                Delete
+            </button>
+        </form>
+    </td>
+</tr>
+
         <?php endforeach; ?>
         </tbody>
     </table>
