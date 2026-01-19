@@ -91,6 +91,26 @@ while ($row = $result->fetch_assoc()) {
 
 $stmt->close();
 
+/* ---- FETCH TRACKS ALREADY IN THIS SEASON ---- */
+$seasonTracks = [];
+
+$stmt = $conn->prepare(
+    "SELECT t.course, t.layout
+     FROM season_tracks st
+     JOIN tracks t ON t.id = st.track_id
+     WHERE st.user_id = ? AND st.season_id = ?
+     ORDER BY st.id ASC"
+);
+$stmt->bind_param("ii", $userId, $seasonId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $seasonTracks[] = $row;
+}
+
+$stmt->close();
+
 
 $conn->close();
 ?>
@@ -129,6 +149,17 @@ $conn->close();
 
     <button type="submit">Add Track</button>
 </form>
+
+<?php if (!empty($seasonTracks)): ?>
+    <h2>Tracks in This Season</h2>
+    <ul>
+        <?php foreach ($seasonTracks as $track): ?>
+            <li>
+                <?= htmlspecialchars($track['course'] . ' – ' . $track['layout']) ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
 
 
 <p>

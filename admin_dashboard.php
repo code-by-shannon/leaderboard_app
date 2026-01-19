@@ -16,123 +16,94 @@ if ($conn->connect_error) {
 }
 
 /* ============================
-   QUERY 1: RAW season_tracks
+   QUERY for rendering of seasons table
    ============================ */
-$sqlRaw = "
+$sqlSeasons = "
 SELECT
-    id,
-    user_id,
-    season_id,
-    track_id,
-    created_at
+    season_tracks.id,
+    users.name AS user_name,
+    seasons.name AS season_name,
+    tracks.course,
+    tracks.layout,
+    season_tracks.created_at
 FROM season_tracks
-ORDER BY id ASC
+JOIN users
+    ON users.id = season_tracks.user_id
+JOIN seasons
+    ON seasons.id = season_tracks.season_id
+JOIN tracks
+    ON tracks.id = season_tracks.track_id
+ORDER BY season_tracks.id ASC
 ";
-$resultRaw = $conn->query($sqlRaw);
-
-/* ============================
-   QUERY 2: READABLE season_tracks
-   ============================ */
-$sqlReadable = "
-SELECT
-    st.id,
-    u.name AS user_name,
-    s.name AS season_name,
-    t.course,
-    t.layout,
-    st.created_at
-FROM season_tracks st
-JOIN users   u ON u.id = st.user_id
-JOIN seasons s ON s.id = st.season_id
-JOIN tracks  t ON t.id = st.track_id
-ORDER BY st.id ASC
-";
-$resultReadable = $conn->query($sqlReadable);
+$season_tracks = $conn->query($sqlSeasons);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Admin Dashboard</title>
-<style>
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 40px;
-}
-th, td {
-    border: 1px solid #ccc;
-    padding: 6px;
-}
-th {
-    background: #eee;
-}
-h2 {
-    margin-top: 40px;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 6px;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        h2 {
+            margin-top: 40px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Admin Dashboard</h1>
+    <h1>Admin Dashboard</h1>
 
-<!-- ============================
-     TABLE 1: RAW VIEW
-     ============================ -->
-<h2>season_tracks (RAW / MACHINE VIEW)</h2>
+    
 
-<table>
-<thead>
-<tr>
-    <th>ID</th>
-    <th>User ID</th>
-    <th>Season ID</th>
-    <th>Track ID</th>
-    <th>Created</th>
-</tr>
-</thead>
-<tbody>
-<?php while ($row = $resultRaw->fetch_assoc()): ?>
-<tr>
-    <td><?= $row['id'] ?></td>
-    <td><?= $row['user_id'] ?></td>
-    <td><?= $row['season_id'] ?></td>
-    <td><?= $row['track_id'] ?></td>
-    <td><?= $row['created_at'] ?></td>
-</tr>
-<?php endwhile; ?>
-</tbody>
-</table>
-
-<!-- ============================
+    <!-- ============================
      TABLE 2: HUMAN VIEW
      ============================ -->
-<h2>season_tracks (HUMAN-READABLE VIEW)</h2>
+    <h2>season_tracks </h2>
 
-<table>
-<thead>
-<tr>
-    <th>ID</th>
-    <th>User</th>
-    <th>Season</th>
-    <th>Track</th>
-    <th>Created</th>
-</tr>
-</thead>
-<tbody>
-<?php while ($row = $resultReadable->fetch_assoc()): ?>
-<tr>
-    <td><?= $row['id'] ?></td>
-    <td><?= htmlspecialchars($row['user_name']) ?></td>
-    <td><?= htmlspecialchars($row['season_name']) ?></td>
-    <td><?= htmlspecialchars($row['course'] . ' – ' . $row['layout']) ?></td>
-    <td><?= $row['created_at'] ?></td>
-</tr>
-<?php endwhile; ?>
-</tbody>
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Season</th>
+                <th>Track</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <?php while ($row = $season_tracks->fetch_assoc()) : ?>
+                <tr>
+                    <td><?= $row['id'] ?></td>
+                    <td><?= htmlspecialchars($row['user_name']) ?></td>
+                    <td><?= htmlspecialchars($row['season_name']) ?></td>
+                    <td><?= htmlspecialchars($row['course'] . ' - ' . $row['layout']) ?></td>
+                    <td><?= $row['created_at'] ?></td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
 
 </body>
+
 </html>
 
 <?php $conn->close(); ?>
