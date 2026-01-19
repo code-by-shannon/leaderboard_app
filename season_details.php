@@ -73,6 +73,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['track_id'])) {
     exit;
 }
 
+/* ---- HANDLE ADD PILOT ---- */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pilot_id'])) {
+    $pilotId = (int)$_POST['pilot_id'];
+
+    if ($pilotId > 0) {
+        $stmt = $conn->prepare(
+            "INSERT INTO season_pilots (user_id, season_id, pilot_id)
+             VALUES (?, ?, ?)"
+        );
+        $stmt->bind_param("iii", $userId, $seasonId, $pilotId);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    // Prevent resubmit on refresh
+    header("Location: season_details.php?season_id=" . $seasonId);
+    exit;
+}
+
+
 
 /* ---- FETCH ALL TRACKS FOR DROPDOWN ---- */
 $allTracks = [];
@@ -90,6 +110,26 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $stmt->close();
+
+/* ---- FETCH USER PILOTS FOR DROPDOWN ---- */
+$allPilots = [];
+
+$stmt = $conn->prepare(
+    "SELECT id, name
+     FROM pilots
+     WHERE user_id = ?
+     ORDER BY name ASC"
+);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $allPilots[] = $row;
+}
+
+$stmt->close();
+
 
 /* ---- FETCH TRACKS ALREADY IN THIS SEASON ---- */
 $seasonTracks = [];
@@ -110,6 +150,27 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $stmt->close();
+
+/* ---- FETCH PILOTS IN THIS SEASON ---- */
+$seasonPilots = [];
+
+$stmt = $conn->prepare(
+    "SELECT p.name
+     FROM season_pilots sp
+     JOIN pilots p ON p.id = sp.pilot_id
+     WHERE sp.user_id = ? AND sp.season_id = ?
+     ORDER BY sp.id ASC"
+);
+$stmt->bind_param("ii", $userId, $seasonId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $seasonPilots[] = $row;
+}
+
+$stmt->close();
+
 
 
 $conn->close();
@@ -160,6 +221,33 @@ $conn->close();
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
+
+<hr>
+
+<h2>Add Pilot to Season</h2>
+
+<form method="post">
+    <select name="pilot_id" required>
+        <option value="">-- Select a pilot --</option>
+        <?php foreach ($allPilots as $pilot): ?>
+            <option value="<?= $pilot['id'] ?>">
+                <?= htmlspecialchars($pilot['name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
+    <button type="submit">Add Pilot</button>
+</form>
+
+<?php if (!empty($seasonPilots)): ?>
+    <h2>Pilots in This Season</h2>
+    <ul>
+        <?php foreach ($seasonPilots as $pilot): ?>
+            <li><?= htmlspecialchars($pilot['name']) ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
 
 
 <p>
