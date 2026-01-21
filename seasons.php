@@ -9,26 +9,20 @@ if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
     exit;
 }
 
-
-$userId = $_SESSION['user_id'];
+$userId   = $_SESSION['user_id'];
 $userName = $_SESSION['user_name'];
 
-
 /* ---- DB CONFIG ---- */
-$DB_HOST = "localhost";
-$DB_USER = "root";
-$DB_PASS = "";
-$DB_NAME = "sclr_2_0";
-
-/* ---- CONNECT ---- */
-$conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+$conn = new mysqli("localhost", "root", "", "sclr_2_0");
 if ($conn->connect_error) {
     die("Database connection failed");
 }
 
-$error = '';
+$error = "";
 
-// ---- HANDLE DELETE SEASON----
+/* =========================
+   HANDLE DELETE SEASON
+   ========================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_season_id'])) {
     $seasonId = (int)$_POST['delete_season_id'];
 
@@ -40,12 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_season_id'])) 
     $stmt->close();
 }
 
-// INSERT LOGIC
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $seasonName = trim($_POST['season_name'] ?? '');
+/* =========================
+   HANDLE CREATE SEASON
+   ========================= */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['season_name'])) {
+    $seasonName = trim($_POST['season_name']);
 
     if ($seasonName === '') {
-        $error = 'Please enter a season name.';
+        $error = "Please enter a season name.";
     } else {
         $stmt = $conn->prepare(
             "INSERT INTO seasons (user_id, name) VALUES (?, ?)"
@@ -56,7 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// ---- FETCH USER SEASONS ----
+/* =========================
+   FETCH USER SEASONS
+   ========================= */
 $seasons = [];
 
 $stmt = $conn->prepare(
@@ -71,9 +69,8 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $stmt->close();
-
+$conn->close();
 ?>
-
 
 
 
@@ -81,7 +78,7 @@ $stmt->close();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>New Season</title>
+    <title>Seasons</title>
 </head>
 <body>
 
@@ -100,8 +97,7 @@ $stmt->close();
 
 <form method="post">
     <label>
-        Season name:
-        <br>
+        Season name:<br>
         <input type="text" name="season_name" required>
     </label>
     <br><br>
@@ -109,6 +105,7 @@ $stmt->close();
 </form>
 
 <h2>Your Seasons</h2>
+
 <?php if (empty($seasons)): ?>
     <p>You haven’t created any seasons yet.</p>
 <?php else: ?>
@@ -116,37 +113,44 @@ $stmt->close();
         <thead>
             <tr>
                 <th>Season Name</th>
-                <th>Action</th>
+                <th>Season Settings</th>
+                <th>Enter Race Results</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
         <?php foreach ($seasons as $season): ?>
             <tr>
-    <td>
-        <a href="season_details.php?season_id=<?= $season['id'] ?>">
-            <?= htmlspecialchars($season['name']) ?>
-        </a>
-    </td>
-    <td>
-        <form method="post" style="display:inline;">
-            <input type="hidden"
-                   name="delete_season_id"
-                   value="<?= $season['id'] ?>">
-            <button type="submit"
-                    onclick="return confirm('Delete this season?')">
-                Delete
-            </button>
-        </form>
-    </td>
-</tr>
+                <td>
+                    <?= htmlspecialchars($season['name']) ?>
+                </td>
 
+                <td>
+                    <a href="season_details.php?season_id=<?= (int)$season['id'] ?>">
+                        Settings
+                    </a>
+                </td>
+
+                <td>
+                    <a href="race_results.php?season_id=<?= (int)$season['id'] ?>">
+                        Enter Results
+                    </a>
+                </td>
+
+                <td>
+                    <form method="post" style="display:inline;"
+                          onsubmit="return confirm('Delete this season?');">
+                        <input type="hidden"
+                               name="delete_season_id"
+                               value="<?= (int)$season['id'] ?>">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
 <?php endif; ?>
-
-
-
 
 </body>
 </html>
