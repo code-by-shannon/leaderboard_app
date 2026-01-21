@@ -1,3 +1,4 @@
+
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -172,6 +173,71 @@ while ($row = $result->fetch_assoc()) {
 $stmt->close();
 
 
+/* ---- FETCH POINTS SYSTEMS + RULES ---- */
+$pointsSystems = [];
+
+$sql = "
+    SELECT 
+        ps.id AS system_id,
+        ps.name AS system_name,
+        pr.position,
+        pr.points
+    FROM points_systems ps
+    JOIN points_rules pr
+        ON pr.points_system_id = ps.id
+    ORDER BY ps.id, pr.position ASC
+";
+
+$result = $conn->query($sql);
+
+while ($row = $result->fetch_assoc()) {
+    $sid = $row['system_id'];
+
+    if (!isset($pointsSystems[$sid])) {
+        $pointsSystems[$sid] = [
+            'name'  => $row['system_name'],
+            'rules' => []
+        ];
+    }
+
+    $pointsSystems[$sid]['rules'][] = [
+        'position' => $row['position'],
+        'points'   => $row['points']
+    ];
+}
+
+
+$currentPointsSystemId = null;
+
+$stmt = $conn->prepare(
+    "SELECT points_system_id
+     FROM seasons
+     WHERE id = ? AND user_id = ?"
+);
+$stmt->bind_param("ii", $seasonId, $userId);
+$stmt->execute();
+$stmt->bind_result($currentPointsSystemId);
+$stmt->fetch();
+$stmt->close();
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['points_system_id'])) {
+    $pointsSystemId = (int)$_POST['points_system_id'];
+
+    $stmt = $conn->prepare(
+        "UPDATE seasons
+         SET points_system_id = ?
+         WHERE id = ? AND user_id = ?"
+    );
+    $stmt->bind_param("iii", $pointsSystemId, $seasonId, $userId);
+    $stmt->execute();
+    $stmt->close();
+
+    header("Location: season_details.php?season_id=" . $seasonId);
+    exit;
+}
+
+
 
 $conn->close();
 ?>
@@ -247,6 +313,75 @@ $conn->close();
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
+
+<hr>
+
+<h2>Select Points System</h2>
+
+<?php if ($currentPointsSystemId): ?>
+
+    <p>
+        <strong>
+            You have chosen the
+            <?= htmlspecialchars($pointsSystems[$currentPointsSystemId]['name']) ?>
+            points system for this season.
+        </strong>
+    </p>
+
+    <table border="1" cellpadding="6" style="max-width:400px;">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($pointsSystems[$currentPointsSystemId]['rules'] as $rule): ?>
+                <tr>
+                    <td><?= $rule['position'] ?></td>
+                    <td><?= $rule['points'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+<?php else: ?>
+
+    <form method="post">
+        <?php foreach ($pointsSystems as $systemId => $system): ?>
+            <div style="margin-bottom:20px; border:1px solid #ccc; padding:10px;">
+                <label>
+                    <input type="radio"
+                           name="points_system_id"
+                           value="<?= $systemId ?>"
+                           required>
+                    <strong><?= htmlspecialchars($system['name']) ?></strong>
+                </label>
+
+                <table border="1" cellpadding="6" style="margin-top:10px;">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($system['rules'] as $rule): ?>
+                            <tr>
+                                <td><?= $rule['position'] ?></td>
+                                <td><?= $rule['points'] ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endforeach; ?>
+
+        <button type="submit">Confirm Points System</button>
+    </form>
+
+<?php endif; ?>
+
 
 
 
