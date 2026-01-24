@@ -115,6 +115,7 @@ $conn->close();
                 <th>Season Name</th>
                 <th>Season Settings</th>
                 <th>Enter Race Results</th>
+                <th>Leaderboard</th>
                 <th>Delete</th>
             </tr>
         </thead>
@@ -136,6 +137,13 @@ $conn->close();
                         Enter Results
                     </a>
                 </td>
+
+                <td>
+    <a href="leaderboard.php?season_id=<?= (int)$season['id'] ?>">
+        View Leaderboard
+    </a>
+</td>
+
 
                 <td>
                     <form method="post" style="display:inline;"
