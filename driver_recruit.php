@@ -43,22 +43,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 }
 
 // ---- HANDLE INSERT ----
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $pilotName = trim($_POST['pilot_name'] ?? '');
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pilot_name'])) {
+    $pilotName = trim($_POST['pilot_name']);
 
     if ($pilotName === '') {
         $error = 'Please enter a pilot name.';
     } else {
-        $stmt = $conn->prepare(
-            "INSERT INTO pilots (user_id, name) VALUES (?, ?)"
+        // Check if pilot already exists for this user
+        $check = $conn->prepare(
+            "SELECT id FROM pilots WHERE user_id = ? AND name = ? LIMIT 1"
         );
-        $stmt->bind_param("is", $userId, $pilotName);
-        $stmt->execute();
-        $stmt->close();
+        $check->bind_param("is", $userId, $pilotName);
+        $check->execute();
+        $check->store_result();
 
-        $pilotName = ''; // clear after insert
+        if ($check->num_rows > 0) {
+            $error = 'That pilot already exists.';
+        } else {
+            // Safe to insert
+            $stmt = $conn->prepare(
+                "INSERT INTO pilots (user_id, name) VALUES (?, ?)"
+            );
+            $stmt->bind_param("is", $userId, $pilotName);
+            $stmt->execute();
+            $stmt->close();
+        }
+
+        $check->close();
     }
 }
+
 
 // ---- FETCH USER PILOTS ----
 $pilots = [];
