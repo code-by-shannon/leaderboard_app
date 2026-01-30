@@ -37,18 +37,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_season_id'])) 
 /* =========================
    HANDLE CREATE SEASON
    ========================= */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['season_name'])) {
+   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['season_name'])) {
     $seasonName = trim($_POST['season_name']);
 
     if ($seasonName === '') {
         $error = "Please enter a season name.";
     } else {
-        $stmt = $conn->prepare(
-            "INSERT INTO seasons (user_id, name) VALUES (?, ?)"
+
+        // 1️⃣ Check for duplicate season name for this user
+        $check = $conn->prepare(
+            "SELECT id FROM seasons WHERE user_id = ? AND name = ? LIMIT 1"
         );
-        $stmt->bind_param("is", $userId, $seasonName);
-        $stmt->execute();
-        $stmt->close();
+        $check->bind_param("is", $userId, $seasonName);
+        $check->execute();
+        $check->store_result();
+
+        if ($check->num_rows > 0) {
+            $error = "You already have a season with that name.";
+            $check->close();
+        } else {
+            $check->close();
+
+            // 2️⃣ Safe to insert
+            $stmt = $conn->prepare(
+                "INSERT INTO seasons (user_id, name) VALUES (?, ?)"
+            );
+            $stmt->bind_param("is", $userId, $seasonName);
+            $stmt->execute();
+            $stmt->close();
+        }
     }
 }
 
@@ -87,7 +104,7 @@ $conn->close();
     <a href="logout.php">Exit User</a>
 </nav>
 
-<h1>Create a New Season</h1>
+<h1>View Current Season or Create New Season</h1>
 
 <p>Logged in as <?= htmlspecialchars($userName) ?></p>
 
