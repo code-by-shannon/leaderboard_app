@@ -38,6 +38,25 @@ if ($conn->connect_error) {
     die("Database connection failed");
 }
 
+/* ---- HANDLE DELETE TRACK ---- */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_season_track_id'])) {
+    $seasonTrackId = (int)$_POST['delete_season_track_id'];
+
+    if ($seasonTrackId > 0) {
+        $stmt = $conn->prepare(
+            "DELETE FROM season_tracks
+             WHERE id = ? AND user_id = ? AND season_id = ?"
+        );
+        $stmt->bind_param("iii", $seasonTrackId, $userId, $seasonId);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    header("Location: season_details.php?season_id=" . $seasonId);
+    exit;
+}
+
+
 /* ---- FETCH SEASON (OWNERSHIP CHECK INCLUDED) ---- */
 $stmt = $conn->prepare(
     "SELECT name FROM seasons WHERE id = ? AND user_id = ?"
@@ -136,7 +155,10 @@ $stmt->close();
 $seasonTracks = [];
 
 $stmt = $conn->prepare(
-    "SELECT t.course, t.layout
+    "SELECT 
+        st.id AS season_track_id,
+        t.course,
+        t.layout
      FROM season_tracks st
      JOIN tracks t ON t.id = st.track_id
      WHERE st.user_id = ? AND st.season_id = ?
@@ -151,6 +173,7 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $stmt->close();
+
 
 /* ---- FETCH PILOTS IN THIS SEASON ---- */
 $seasonPilots = [];
@@ -277,42 +300,28 @@ $conn->close();
     <button type="submit">Add Track</button>
 </form>
 
+<hr>
 <?php if (!empty($seasonTracks)): ?>
     <h2>Tracks in This Season</h2>
     <ul>
         <?php foreach ($seasonTracks as $track): ?>
             <li>
                 <?= htmlspecialchars($track['course'] . ' – ' . $track['layout']) ?>
+
+                <form method="post" style="display:inline;">
+                    <input type="hidden"
+                           name="delete_season_track_id"
+                           value="<?= $track['season_track_id'] ?>">
+                    <button type="submit"
+                            onclick="return confirm('Remove this track from the season?');">
+                        Delete
+                    </button>
+                </form>
             </li>
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
 
-<hr>
-
-<h2>Add Pilot to Season</h2>
-
-<form method="post">
-    <select name="pilot_id" required>
-        <option value="">-- Select a pilot --</option>
-        <?php foreach ($allPilots as $pilot): ?>
-            <option value="<?= $pilot['id'] ?>">
-                <?= htmlspecialchars($pilot['name']) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-
-    <button type="submit">Add Pilot</button>
-</form>
-
-<?php if (!empty($seasonPilots)): ?>
-    <h2>Pilots in This Season</h2>
-    <ul>
-        <?php foreach ($seasonPilots as $pilot): ?>
-            <li><?= htmlspecialchars($pilot['name']) ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
 
 <hr>
 
