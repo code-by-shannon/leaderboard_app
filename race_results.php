@@ -107,6 +107,8 @@ $conn->close();
 <h2><?= htmlspecialchars($seasonName) ?></h2>
 
 <form method="post" action="save_results.php">
+<input type="hidden" name="season_id" value="<?= (int)$seasonId ?>">
+
 
 <!-- ================= TRACK ================= -->
 <section>
@@ -123,14 +125,14 @@ $conn->close();
 <!-- ================= RESULTS ================= -->
 <section>
     <h3>2) Assign positions to drivers</h3>
-
     <?php foreach ($pointsRules as $rule): ?>
         <div style="margin-bottom:8px;">
             <strong><?= $rule['position'] ?><?= match($rule['position']) {
                 1 => 'st', 2 => 'nd', 3 => 'rd', default => 'th'
             } ?></strong>
+<select name="results[<?= $rule['position'] ?>]" class="driver-select">
 
-            <select name="results[<?= $rule['position'] ?>]">
+
                 <option value="">— Select driver —</option>
                 <?php foreach ($pilots as $pilot): ?>
                     <option value="<?= $pilot['id'] ?>">
@@ -143,12 +145,47 @@ $conn->close();
         </div>
     <?php endforeach; ?>
 </section>
-
 <input type="hidden" name="season_id" value="<?= $seasonId ?>">
-
 <button type="submit">Save Results</button>
-
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const selects = document.querySelectorAll('.driver-select');
+
+    function updateDisabledOptions() {
+        const selectedValues = new Set();
+
+        // collect selected driver IDs
+        selects.forEach(select => {
+            if (select.value !== '') {
+                selectedValues.add(select.value);
+            }
+        });
+
+        // update all dropdowns
+        selects.forEach(select => {
+            Array.from(select.options).forEach(option => {
+                if (option.value === '') return;
+
+                // disable if selected elsewhere
+                option.disabled =
+                    selectedValues.has(option.value) &&
+                    select.value !== option.value;
+            });
+        });
+    }
+
+    // attach listeners
+    selects.forEach(select => {
+        select.addEventListener('change', updateDisabledOptions);
+    });
+
+    // initial run (in case of preselected values)
+    updateDisabledOptions();
+});
+</script>
+
 
 </body>
 </html>

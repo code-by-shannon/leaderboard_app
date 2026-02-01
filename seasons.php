@@ -131,6 +131,7 @@ $conn->close();
             <tr>
                 <th>Season Name</th>
                 <th>Season Settings</th>
+                <th>Season Pilots</th>
                 <th>Enter Race Results</th>
                 <th>Leaderboard</th>
                 <th>Delete</th>
@@ -139,27 +140,12 @@ $conn->close();
         <tbody>
         <?php foreach ($seasons as $season): ?>
             <tr>
-                <td>
-                    <?= htmlspecialchars($season['name']) ?>
-                </td>
+                <td><?= htmlspecialchars($season['name']) ?></td>
+                <td><a href="season_details.php?season_id=<?= (int)$season['id'] ?>">Settings</a></td>
+                <td><a href="season_pilots.php?season_id=<?= (int)$season['id'] ?>">Pilots</a></td>
 
-                <td>
-                    <a href="season_details.php?season_id=<?= (int)$season['id'] ?>">
-                        Settings
-                    </a>
-                </td>
-
-                <td>
-                    <a href="race_results.php?season_id=<?= (int)$season['id'] ?>">
-                        Enter Results
-                    </a>
-                </td>
-
-                <td>
-    <a href="leaderboard.php?season_id=<?= (int)$season['id'] ?>">
-        View Leaderboard
-    </a>
-</td>
+                <td><a href="race_results.php?season_id=<?= (int)$season['id'] ?>">Enter Results</a></td>
+                <td><a href="leaderboard.php?season_id=<?= (int)$season['id'] ?>">View Leaderboard</a></td>
 
 
                 <td>
