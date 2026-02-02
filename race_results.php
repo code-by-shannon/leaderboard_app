@@ -170,6 +170,10 @@ $conn->close();
 </section>
 <input type="hidden" name="season_id" value="<?= $seasonId ?>">
 <button type="submit">Save Results</button>
+<a href="leaderboard.php?season_id=<?= (int)$seasonId ?>">
+    Go to Leaderboard
+</a>
+
 </form>
 
 <script>

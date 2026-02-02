@@ -265,6 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['points_system_id'])) 
 $conn->close();
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -278,7 +279,9 @@ $conn->close();
     <a href="/SCLR_2_0/seasons.php">All Seasons</a> |
     <a href="/SCLR_2_0/logout.php">Exit User</a>
 </nav>
-
+<p>This page lets you choose which tracks will be used in your season.
+After selecting your tracks, choose a points scoring system. When you’re done, head back to the Season Overview to continue.
+</p>
 <h1>Season: <?= htmlspecialchars($seasonName) ?></h1>
 
 <p>Logged in as <?= htmlspecialchars($userName) ?></p>
