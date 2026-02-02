@@ -63,29 +63,35 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <title>SCLR 2.0 – Choose User</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/index.css">
+    
 </head>
 
-<body>
+<body class="page-index">
 
-    <h1>Welcome to your personalized Leaderboard App</h1>
+    <main class="page-center">
+        <section class="login-card">
 
+            <h1>Leaderboard App</h1>
 
-    <p>Already have a username? Type it in and go</p>
-    <p>Are you a new to the app? Please create a username</p>
-    <?php if ($error) : ?>
-        <p style="color:red;"><?= htmlspecialchars($error) ?></p>
-    <?php endif; ?>
+            <?php if ($error) : ?>
+                <p class="error"><?= htmlspecialchars($error) ?></p>
+            <?php endif; ?>
 
-    <form method="post">
-        <label>
-            username
-            <br>
-            <input type="text" name="name" required>
-        </label>
-        <br><br>
-        <button type="submit">Continue</button>
-    </form>
+            <form method="post">
+                <label>
+                    New or Existing User Name
+                    <input type="text" name="name" required>
+                </label>
+
+                <button type="submit">Continue</button>
+            </form>
+
+        </section>
+    </main>
 
 </body>
+
 
 </html>
