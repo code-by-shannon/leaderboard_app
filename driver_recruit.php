@@ -97,6 +97,7 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <title>Add Pilot</title>
+    <link rel="stylesheet" href="css/driver_recruit.css">
 </head>
 <body>
 
@@ -107,9 +108,8 @@ $stmt->close();
     </ul>
 </nav>
 
-<p>Welcome to the Add a Pilot page!
-Here you can manage all the drivers in your league. Enter a pilot’s name below to add them to your roster, then head to the Season Overview to select which pilots will compete in each season.</p>
-<h1>Add a Pilot</h1>
+
+
 
 <?php if ($error): ?>
     <p style="color:red;"><?= htmlspecialchars($error) ?></p>
@@ -120,7 +120,7 @@ Here you can manage all the drivers in your league. Enter a pilot’s name below
 
 <form method="post">
     <label>
-        Pilot name:
+Add / Manage Pilots:
         <br>
         <input type="text" name="pilot_name">
     </label>
