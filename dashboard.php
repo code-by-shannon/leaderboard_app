@@ -22,8 +22,7 @@ $isReturning = $_SESSION['is_returning'] ?? false;
 <body>
 <nav>
     <ul>
-        <li><a href="index.php">index.php</a></li>
-        <li><a href="logout.php">Exit User</a></li>
+        <li><a href="logout.php">Exit User</a> (This will log you out)</li>
     </ul>
 </nav>
 
@@ -34,8 +33,20 @@ $isReturning = $_SESSION['is_returning'] ?? false;
     ?>
 </h1>
 
-<p><a href="driver_recruit.php">Recruit / view your drivers</a></p>
-<p><a href="seasons.php">Season Overview</a></p>
+<p>
+  <a href="driver_recruit.php">Add and manage drivers</a><br>
+  <small>
+    Start here by creating a list of drivers. You’ll assign drivers to specific seasons in the Season Overview.
+  </small>
+</p>
+
+<p>
+  <a href="seasons.php">Season Overview</a><br>
+  <small>
+    Create and manage seasons. Assign drivers to each season and enter race results.
+  </small>
+</p>
+
 
 </body>
 </html>

@@ -141,7 +141,12 @@ $stmt->close();
 </head>
 <body>
 
+
+<p>
+    <a href="seasons.php">← Back to Seasons</a>
+</p>
 <h1>Leaderboard</h1>
+
 <h2><?= htmlspecialchars($seasonName) ?></h2>
 
 <table>

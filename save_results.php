@@ -59,6 +59,15 @@ while ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
+$delete = $conn->prepare(
+    "DELETE FROM race_results
+     WHERE season_id = ? AND track_id = ? AND user_id = ?"
+);
+$delete->bind_param("iii", $seasonId, $trackId, $userId);
+$delete->execute();
+$delete->close();
+
+
 /* ---- PREPARE INSERT ---- */
 $insert = $conn->prepare(
     "INSERT INTO race_results

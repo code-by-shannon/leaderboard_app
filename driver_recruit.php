@@ -107,6 +107,8 @@ $stmt->close();
     </ul>
 </nav>
 
+<p>Welcome to the Add a Pilot page!
+Here you can manage all the drivers in your league. Enter a pilot’s name below to add them to your roster, then head to the Season Overview to select which pilots will compete in each season.</p>
 <h1>Add a Pilot</h1>
 
 <?php if ($error): ?>

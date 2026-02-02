@@ -88,8 +88,27 @@ while ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
+$completedTracks = [];
+
+$stmt = $conn->prepare(
+    "SELECT DISTINCT track_id
+     FROM race_results
+     WHERE season_id = ? AND user_id = ?"
+);
+$stmt->bind_param("ii", $seasonId, $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $completedTracks[] = (int)$row['track_id'];
+}
+$stmt->close();
+
+
 $conn->close();
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,20 +128,24 @@ $conn->close();
 <form method="post" action="save_results.php">
 <input type="hidden" name="season_id" value="<?= (int)$seasonId ?>">
 
-
-<!-- ================= TRACK ================= -->
+<!-- ================= CHOOSE TRACK ================= -->
 <section>
-    <h3>1) Choose the track</h3>
+  <h3>1) Choose the track</h3>
 
-    <?php foreach ($tracks as $track): ?>
-        <label>
-            <input type="radio" name="track_id" value="<?= $track['id'] ?>" required>
-            <?= htmlspecialchars($track['course'] . ' – ' . $track['layout']) ?>
-        </label><br>
-    <?php endforeach; ?>
+  <?php foreach ($tracks as $track): ?>
+    <?php $isCompleted = in_array($track['id'], $completedTracks); ?>
+
+    <label style="<?= $isCompleted ? 'opacity:0.7;' : '' ?>">
+      <input type="radio" name="track_id" value="<?= $track['id'] ?>" required>
+      <?= htmlspecialchars($track['course'] . ' – ' . $track['layout']) ?>
+      <?php if ($isCompleted): ?>
+        <em>(results already entered)</em>
+      <?php endif; ?>
+    </label><br>
+  <?php endforeach; ?>
 </section>
 
-<!-- ================= RESULTS ================= -->
+<!-- ================= ENTER DRIVER RESULTS ================= -->
 <section>
     <h3>2) Assign positions to drivers</h3>
     <?php foreach ($pointsRules as $rule): ?>
