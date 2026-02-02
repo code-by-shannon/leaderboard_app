@@ -1,0 +1,116 @@
+/* ---- GLOBAL RESET ---- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #fff;
+
+    background-image: url("../imgs/dashboard.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ---- NAV ---- */
+.top-nav {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.top-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.logout-note {
+    opacity: 0.7;
+    margin-left: 6px;
+    font-size: 0.9rem;
+}
+
+/* ---- CENTERING WRAPPER ---- */
+.page-center {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---- DASHBOARD CARD ---- */
+.dashboard-card {
+    max-width: 520px;
+    width: 90%;
+    padding: 2.5rem;
+
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+
+    border-radius: 14px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- HEADLINE ---- */
+.dashboard-card h1 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+/* ---- LINKS ---- */
+.dashboard-link {
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-link a {
+    display: inline-block;
+    color: #ffd54f;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 0.3rem;
+}
+
+.dashboard-link a:hover {
+    text-decoration: underline;
+}
+
+.dashboard-link p {
+    margin: 0;
+    font-size: 0.95rem;
+    opacity: 0.85;
+}
+
+
+.dashboard-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.action-link {
+    display: block;
+    padding: 1rem 1.2rem;
+
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+
+    color: #ffd54f;
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: 
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+.action-link:hover {
+    background: rgba(255, 255, 255, 0.16);
+    transform: translateY(-2px);
+}

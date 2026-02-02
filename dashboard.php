@@ -18,35 +18,42 @@ $isReturning = $_SESSION['is_returning'] ?? false;
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<nav>
+
+<nav class="top-nav">
     <ul>
-        <li><a href="logout.php">Exit User</a> (This will log you out)</li>
+        <li>
+            <a href="logout.php">Exit User</a>
+            <span class="logout-note">(This will log you out)</span>
+        </li>
     </ul>
 </nav>
 
-<h1>
-    <?= $isReturning
-        ? "Welcome back " . htmlspecialchars($userName)
-        : "Welcome " . htmlspecialchars($userName)
-    ?>
-</h1>
+<main class="page-center">
+    <section class="dashboard-card">
 
-<p>
-  <a href="driver_recruit.php">Add and manage drivers</a><br>
-  <small>
-    Start here by creating a list of drivers. You’ll assign drivers to specific seasons in the Season Overview.
-  </small>
-</p>
+        <h1>
+            <?= $isReturning
+                ? "Welcome back " . htmlspecialchars($userName)
+                : "Welcome " . htmlspecialchars($userName)
+            ?>
+        </h1>
 
-<p>
-  <a href="seasons.php">Season Overview</a><br>
-  <small>
-    Create and manage seasons. Assign drivers to each season and enter race results.
-  </small>
-</p>
+        <div class="dashboard-link">
+            <a href="driver_recruit.php">Add and manage drivers</a>
+            
+        </div>
 
+        <div class="dashboard-link">
+            <a href="seasons.php">Season Overview</a>
+           
+        </div>
+
+    </section>
+</main>
 
 </body>
 </html>
