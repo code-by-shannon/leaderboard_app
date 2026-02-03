@@ -271,6 +271,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <title>Season Details</title>
+    <link rel="stylesheet" href="css/season_details.css">
 </head>
 <body>
 
@@ -279,9 +280,11 @@ $conn->close();
     <a href="/SCLR_2_0/seasons.php">All Seasons</a> |
     <a href="/SCLR_2_0/logout.php">Exit User</a>
 </nav>
-<p>This page lets you choose which tracks will be used in your season.
-After selecting your tracks, choose a points scoring system. When you’re done, head back to the Season Overview to continue.
-</p>
+
+<main>
+  <div class="panel">
+
+
 <h1>Season: <?= htmlspecialchars($seasonName) ?></h1>
 
 <p>Logged in as <?= htmlspecialchars($userName) ?></p>
@@ -330,7 +333,7 @@ After selecting your tracks, choose a points scoring system. When you’re done,
 
 <h2>Select Points System</h2>
 
-<?php if ($currentPointsSystemId): ?>
+<?php if ($currentPointsSystemId && isset($pointsSystems[$currentPointsSystemId])): ?>
 
     <p>
         <strong>
@@ -340,28 +343,27 @@ After selecting your tracks, choose a points scoring system. When you’re done,
         </strong>
     </p>
 
-    <table border="1" cellpadding="6" style="max-width:400px;">
-        <thead>
-            <tr>
-                <th>Position</th>
-                <th>Points</th>
-            </tr>
-        </thead>
-        <tbody>
+    <table class="points-table">
+        <tr>
+            <th>Position</th>
             <?php foreach ($pointsSystems[$currentPointsSystemId]['rules'] as $rule): ?>
-                <tr>
-                    <td><?= $rule['position'] ?></td>
-                    <td><?= $rule['points'] ?></td>
-                </tr>
+                <th><?= $rule['position'] ?></th>
             <?php endforeach; ?>
-        </tbody>
+        </tr>
+        <tr>
+            <th>Points</th>
+            <?php foreach ($pointsSystems[$currentPointsSystemId]['rules'] as $rule): ?>
+                <td><?= $rule['points'] ?></td>
+            <?php endforeach; ?>
+        </tr>
     </table>
 
 <?php else: ?>
 
     <form method="post">
         <?php foreach ($pointsSystems as $systemId => $system): ?>
-            <div style="margin-bottom:20px; border:1px solid #ccc; padding:10px;">
+            <div class="points-system">
+
                 <label>
                     <input type="radio"
                            name="points_system_id"
@@ -370,22 +372,21 @@ After selecting your tracks, choose a points scoring system. When you’re done,
                     <strong><?= htmlspecialchars($system['name']) ?></strong>
                 </label>
 
-                <table border="1" cellpadding="6" style="margin-top:10px;">
-                    <thead>
-                        <tr>
-                            <th>Position</th>
-                            <th>Points</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <table class="points-table">
+                    <tr>
+                        <th>Position</th>
                         <?php foreach ($system['rules'] as $rule): ?>
-                            <tr>
-                                <td><?= $rule['position'] ?></td>
-                                <td><?= $rule['points'] ?></td>
-                            </tr>
+                            <th><?= $rule['position'] ?></th>
                         <?php endforeach; ?>
-                    </tbody>
+                    </tr>
+                    <tr>
+                        <th>Points</th>
+                        <?php foreach ($system['rules'] as $rule): ?>
+                            <td><?= $rule['points'] ?></td>
+                        <?php endforeach; ?>
+                    </tr>
                 </table>
+
             </div>
         <?php endforeach; ?>
 
@@ -397,10 +398,11 @@ After selecting your tracks, choose a points scoring system. When you’re done,
 
 
 
-<p>
-    This is the season details page.<br>
-    Driver assignment, tracks, and results will live here.
-</p>
+
+
+
+</div>
+</main>
 
 </body>
 </html>
