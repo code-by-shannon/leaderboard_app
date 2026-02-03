@@ -132,55 +132,66 @@ $stmt->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Leaderboard</title>
-<style>
-    table { border-collapse: collapse; }
-    th, td { border: 1px solid #000; padding: 6px 10px; }
-</style>
+    <meta charset="UTF-8">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="css/leaderboard.css">
 </head>
+
 <body>
 
+<nav>
+    <a href="dashboard.php">Dashboard</a> |
+    <a href="seasons.php">Seasons</a> |
+    <a href="logout.php">Exit User</a>
+</nav>
 
-<p>
-    <a href="seasons.php">← Back to Seasons</a>
-</p>
-<h1>Leaderboard</h1>
+<main>
+  <div class="panel">
 
-<h2><?= htmlspecialchars($seasonName) ?></h2>
+    <h1>Leaderboard</h1>
+    <h2><?= htmlspecialchars($seasonName) ?></h2>
 
-<table>
-    <tr>
-        <th>Pilot</th>
+    <div class="table-wrap">
+        <table class="leaderboard">
+            <thead>
+                <tr>
+                    <th>Pilot</th>
 
-        <?php foreach ($tracks as $trackName): ?>
-            <th><?= htmlspecialchars($trackName) ?></th>
-        <?php endforeach; ?>
+                    <?php foreach ($tracks as $trackName): ?>
+                        <th><?= htmlspecialchars($trackName) ?></th>
+                    <?php endforeach; ?>
 
-        <th>Total</th>
-    </tr>
+                    <th>Total</th>
+                </tr>
+            </thead>
 
-    <?php foreach ($pilots as $pilot): ?>
-        <tr>
-            <td><?= htmlspecialchars($pilot['name']) ?></td>
+            <tbody>
+                <?php foreach ($pilots as $pilot): ?>
+                    <tr>
+                        <td class="pilot-name"><?= htmlspecialchars($pilot['name']) ?></td>
 
-            <?php foreach ($tracks as $trackId => $trackName): ?>
-                <td>
-                    <?= $pilot['points'][$trackId] ?? '—' ?>
-                </td>
-            <?php endforeach; ?>
+                        <?php foreach ($tracks as $trackId => $trackName): ?>
+                            <td>
+                                <?= $pilot['points'][$trackId] ?? '—' ?>
+                            </td>
+                        <?php endforeach; ?>
 
-            <td><strong><?= $pilot['total'] ?></strong></td>
-        </tr>
-    <?php endforeach; ?>
-</table>
+                        <td class="total-points"><?= $pilot['total'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 
-<p>
-    Logged in as <?= htmlspecialchars($displayUserName) ?>
-</p>
+    <p class="user-line">
+        Logged in as <?= htmlspecialchars($displayUserName) ?>
+    </p>
 
+  </div>
+</main>
 
 </body>
+
 </html>
 
 <?php

@@ -154,7 +154,8 @@ th {
 }
 
 td {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(237, 236, 219, 0.08);
+    color: #ffd966;
 }
 
 td a {
@@ -216,4 +217,5 @@ td form button:hover {
 
 .seasons-table td {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e6e6e6 !important;
 }
