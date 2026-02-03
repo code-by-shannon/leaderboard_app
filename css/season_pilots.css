@@ -1,0 +1,133 @@
+/* ===== BASE ===== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #f5f5f5;
+
+    background-image: url("../imgs/car_driver.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ===== NAV ===== */
+nav {
+    position: fixed;
+    top: 1.25rem;
+    left: 1.75rem;
+    z-index: 10;
+}
+
+nav a {
+    color: #ffd966;
+    text-decoration: none;
+    font-weight: 600;
+    margin-right: 1.25rem;
+}
+
+/* ===== CENTER PANEL ===== */
+main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+}
+
+.panel {
+    width: 100%;
+    max-width: 900px;
+    padding: 2.5rem 3rem;
+
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1 {
+    margin-top: 0;
+    color: #ffd966;
+}
+
+h2 {
+    margin-top: 2rem;
+}
+
+.success {
+    color: #7dff7d;
+    font-weight: 700;
+}
+
+.back-link a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+/* ===== TABLE ===== */
+.pilots-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.pilots-table th,
+.pilots-table td {
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.pilots-table th {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffd966;
+}
+
+.pilots-table td {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.pilots-table input {
+    transform: scale(1.2);
+}
+
+/* ===== BUTTONS ===== */
+button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    border: none;
+    background: #ffd966;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ffcf4d;
+}
+
+button.danger {
+    background: #ff6b6b;
+    margin-left: 0.75rem;
+}
+
+button.danger:hover {
+    background: #ff4c4c;
+}
+
+/* ===== ASSIGNED LIST ===== */
+.assigned-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.assigned-list li {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}

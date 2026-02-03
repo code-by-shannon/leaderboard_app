@@ -132,73 +132,86 @@ if ($seasonName === '') {
 <head>
     <meta charset="UTF-8">
     <title>Assign Pilots to Season</title>
+    <link rel="stylesheet" href="css/season_pilots.css">
 </head>
+
 <body>
 
-<h1>Assign Pilots to: <?= htmlspecialchars($seasonName) ?></h1>
+<nav>
+    <a href="/SCLR_2_0/dashboard.php">Dashboard</a> |
+    <a href="/SCLR_2_0/seasons.php">All Seasons</a> |
+    <a href="/SCLR_2_0/logout.php">Exit User</a>
+</nav>
 
-<?php if (!empty($_SESSION['season_pilots_success'])): ?>
-    <p style="color: green; font-weight: bold;">
-        Season drivers updated successfully.
+<main>
+  <div class="panel">
+
+    <h1>Assign Pilots to: <?= htmlspecialchars($seasonName) ?></h1>
+
+    <?php if (!empty($_SESSION['season_pilots_success'])): ?>
+        <p class="success">
+            Season drivers updated successfully.
+        </p>
+        <?php unset($_SESSION['season_pilots_success']); ?>
+    <?php endif; ?>
+
+    <p class="back-link">
+        <a href="seasons.php">← Back to Seasons</a>
     </p>
-    <?php unset($_SESSION['season_pilots_success']); ?>
-<?php endif; ?>
 
+    <form method="post">
+        <table class="pilots-table">
+            <thead>
+                <tr>
+                    <th>In Season</th>
+                    <th>Pilot Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($pilots as $pilot): ?>
+                    <tr>
+                        <td>
+                            <input
+                                type="checkbox"
+                                name="pilots[]"
+                                value="<?= $pilot['id'] ?>"
+                                <?= in_array($pilot['id'], $assigned) ? 'checked' : '' ?>
+                            >
+                        </td>
+                        <td><?= htmlspecialchars($pilot['name']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
 
+                <?php if (empty($pilots)): ?>
+                    <tr>
+                        <td colspan="2">No pilots found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
 
-<p>
-    <a href="seasons.php">← Back to Seasons</a>
-</p>
+        <button type="submit">Save Season Drivers</button>
+    </form>
 
-<form method="post">
-    <table border="1" cellpadding="6">
-        <tr>
-            <th>In Season?</th>
-            <th>Pilot Name</th>
-        </tr>
+    <?php if (!empty($assignedPilots)): ?>
+        <h2>Current Season Drivers</h2>
 
-        <?php foreach ($pilots as $pilot): ?>
-            <tr>
-                <td style="text-align:center;">
-                    <input
-                        type="checkbox"
-                        name="pilots[]"
-                        value="<?= $pilot['id'] ?>"
-                        <?= in_array($pilot['id'], $assigned) ? 'checked' : '' ?>
-                    >
-                </td>
-                <td><?= htmlspecialchars($pilot['name']) ?></td>
-            </tr>
-        <?php endforeach; ?>
+        <ul class="assigned-list">
+            <?php foreach ($assignedPilots as $pilot): ?>
+                <li>
+                    <?= htmlspecialchars($pilot['name']) ?>
+                    <form method="post" action="season_pilots_remove.php">
+                        <input type="hidden" name="season_id" value="<?= $seasonId ?>">
+                        <input type="hidden" name="pilot_id" value="<?= $pilot['id'] ?>">
+                        <button class="danger" type="submit">Remove</button>
+                    </form>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
 
-        <?php if (empty($pilots)): ?>
-            <tr>
-                <td colspan="2">No pilots found.</td>
-            </tr>
-        <?php endif; ?>
-    </table>
-
-    <br>
-    <button type="submit">Save Season Drivers</button>
-</form>
-
-<?php if (!empty($assignedPilots)): ?>
-    <h2>Current Season Drivers</h2>
-
-    <ul>
-        <?php foreach ($assignedPilots as $pilot): ?>
-            <li>
-                <?= htmlspecialchars($pilot['name']) ?>
-                <form method="post" action="season_pilots_remove.php" style="display:inline;">
-                    <input type="hidden" name="season_id" value="<?= $seasonId ?>">
-                    <input type="hidden" name="pilot_id" value="<?= $pilot['id'] ?>">
-                    <button type="submit">Remove</button>
-                </form>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
-
+  </div>
+</main>
 
 </body>
 </html>
