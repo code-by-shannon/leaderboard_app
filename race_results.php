@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
+$userName = $_SESSION['user_name'] ?? '';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
@@ -112,107 +113,94 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Enter Race Results</title>
-<style>
-    body { font-family: Arial, sans-serif; }
-    section { border: 1px solid #ccc; padding: 20px; margin-bottom: 30px; }
-    select { width: 260px; }
-</style>
+    <meta charset="UTF-8">
+    <title>Enter Race Results</title>
+    <link rel="stylesheet" href="css/race_results.css">
 </head>
 <body>
 
-<h1>Enter Race Results</h1>
-<h2><?= htmlspecialchars($seasonName) ?></h2>
+<nav>
+    <a href="/SCLR_2_0/dashboard.php">Dashboard</a> |
+    <a href="/SCLR_2_0/seasons.php">All Seasons</a> |
+    <a href="/SCLR_2_0/logout.php">Exit User</a>
+</nav>
 
-<form method="post" action="save_results.php">
-<input type="hidden" name="season_id" value="<?= (int)$seasonId ?>">
+<main>
+  <div class="panel">
 
-<!-- ================= CHOOSE TRACK ================= -->
-<section>
-  <h3>1) Choose the track</h3>
+    <h1>Enter Race Results</h1>
+    <h2><?= htmlspecialchars($seasonName) ?></h2>
 
-  <?php foreach ($tracks as $track): ?>
-    <?php $isCompleted = in_array($track['id'], $completedTracks); ?>
+    <p class="user-line">
+        Logged in as <?= htmlspecialchars($userName) ?>
+    </p>
 
-    <label style="<?= $isCompleted ? 'opacity:0.7;' : '' ?>">
-      <input type="radio" name="track_id" value="<?= $track['id'] ?>" required>
-      <?= htmlspecialchars($track['course'] . ' – ' . $track['layout']) ?>
-      <?php if ($isCompleted): ?>
-        <em>(results already entered)</em>
-      <?php endif; ?>
-    </label><br>
-  <?php endforeach; ?>
-</section>
+    <form method="post" action="save_results.php">
+        <input type="hidden" name="season_id" value="<?= (int)$seasonId ?>">
 
-<!-- ================= ENTER DRIVER RESULTS ================= -->
-<section>
-    <h3>2) Assign positions to drivers</h3>
-    <?php foreach ($pointsRules as $rule): ?>
-        <div style="margin-bottom:8px;">
-            <strong><?= $rule['position'] ?><?= match($rule['position']) {
-                1 => 'st', 2 => 'nd', 3 => 'rd', default => 'th'
-            } ?></strong>
-<select name="results[<?= $rule['position'] ?>]" class="driver-select">
+        <!-- ===== TRACK SELECTION ===== -->
+        <section>
+            <h3>1) Choose the track</h3>
 
+            <?php foreach ($tracks as $track): ?>
+                <?php $isCompleted = in_array($track['id'], $completedTracks); ?>
 
-                <option value="">— Select driver —</option>
-                <?php foreach ($pilots as $pilot): ?>
-                    <option value="<?= $pilot['id'] ?>">
-                        <?= htmlspecialchars($pilot['name']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+                <label class="track-option <?= $isCompleted ? 'completed' : '' ?>">
+                    <input type="radio"
+                           name="track_id"
+                           value="<?= $track['id'] ?>"
+                           required
+                           <?= $isCompleted ? 'disabled' : '' ?>>
 
-            (<?= $rule['points'] ?> pts)
+                    <?= htmlspecialchars($track['course'] . ' – ' . $track['layout']) ?>
+
+                    <?php if ($isCompleted): ?>
+                        <em>(results already entered)</em>
+                    <?php endif; ?>
+                </label>
+            <?php endforeach; ?>
+        </section>
+
+        <!-- ===== DRIVER POSITIONS ===== -->
+        <section>
+            <h3>2) Assign positions to drivers</h3>
+
+            <?php foreach ($pointsRules as $rule): ?>
+                <div class="position-row">
+                    <strong>
+                        <?= $rule['position'] ?><?= match($rule['position']) {
+                            1 => 'st', 2 => 'nd', 3 => 'rd', default => 'th'
+                        } ?>
+                    </strong>
+
+                    <select name="results[<?= $rule['position'] ?>]"
+                            class="driver-select">
+                        <option value="">— Select driver —</option>
+                        <?php foreach ($pilots as $pilot): ?>
+                            <option value="<?= $pilot['id'] ?>">
+                                <?= htmlspecialchars($pilot['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <span class="points">(<?= $rule['points'] ?> pts)</span>
+                </div>
+            <?php endforeach; ?>
+        </section>
+
+        <div class="actions">
+            <button type="submit">Save Results</button>
+            <a class="secondary"
+               href="leaderboard.php?season_id=<?= (int)$seasonId ?>">
+                Go to Leaderboard
+            </a>
         </div>
-    <?php endforeach; ?>
-</section>
-<input type="hidden" name="season_id" value="<?= $seasonId ?>">
-<button type="submit">Save Results</button>
-<a href="leaderboard.php?season_id=<?= (int)$seasonId ?>">
-    Go to Leaderboard
-</a>
 
-</form>
+    </form>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const selects = document.querySelectorAll('.driver-select');
-
-    function updateDisabledOptions() {
-        const selectedValues = new Set();
-
-        // collect selected driver IDs
-        selects.forEach(select => {
-            if (select.value !== '') {
-                selectedValues.add(select.value);
-            }
-        });
-
-        // update all dropdowns
-        selects.forEach(select => {
-            Array.from(select.options).forEach(option => {
-                if (option.value === '') return;
-
-                // disable if selected elsewhere
-                option.disabled =
-                    selectedValues.has(option.value) &&
-                    select.value !== option.value;
-            });
-        });
-    }
-
-    // attach listeners
-    selects.forEach(select => {
-        select.addEventListener('change', updateDisabledOptions);
-    });
-
-    // initial run (in case of preselected values)
-    updateDisabledOptions();
-});
-</script>
-
+  </div>
+</main>
 
 </body>
 </html>
+
