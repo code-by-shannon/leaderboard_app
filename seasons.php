@@ -96,6 +96,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <title>Seasons</title>
+    <link rel="stylesheet" href="css/seasons.css">
 </head>
 <body>
 
@@ -104,12 +105,15 @@ $conn->close();
     <a href="logout.php">Exit User</a>
 </nav>
 
-<h1>View Current Season or Create New Season</h1>
+<main>
+    <div class="panel">
+
+    <h1>View Current Season or Create New Season</h1>
 
 <p>Logged in as <?= htmlspecialchars($userName) ?></p>
 
 <?php if ($error): ?>
-    <p style="color:red;"><?= htmlspecialchars($error) ?></p>
+    <p class="error"><?= htmlspecialchars($error) ?></p>
 <?php endif; ?>
 
 <form method="post">
@@ -126,7 +130,8 @@ $conn->close();
 <?php if (empty($seasons)): ?>
     <p>You haven’t created any seasons yet.</p>
 <?php else: ?>
-    <table border="1" cellpadding="6">
+    <table class="seasons-table">
+
         <thead>
             <tr>
                 <th>Season Name</th>
@@ -162,6 +167,12 @@ $conn->close();
         </tbody>
     </table>
 <?php endif; ?>
+
+    </div>
+</main>
+
+
+
 
 </body>
 </html>
