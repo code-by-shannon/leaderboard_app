@@ -18,7 +18,7 @@ if (!isset($_GET['season_id'])) {
 
 $seasonId = (int)$_GET['season_id'];
 
-$conn = new mysqli("localhost", "root", "", "sclr_2_0");
+$conn = new mysqli("localhost", "ujlfg9acjgmgu", "", "dbggshhbizolvg");
 if ($conn->connect_error) {
     die("DB connection failed");
 }

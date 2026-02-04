@@ -7,7 +7,7 @@ session_start();
 
 
 /* ---- DB CONFIG ---- */
-$conn = new mysqli("localhost", "root", "", "sclr_2_0");
+$conn = new mysqli("localhost", "ujlfg9acjgmgu", "", "dbggshhbizolvg");
 if ($conn->connect_error) {
     die("Database connection failed");
 }

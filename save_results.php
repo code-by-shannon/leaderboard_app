@@ -21,7 +21,7 @@ $seasonId = (int)$_POST['season_id'];
 $trackId  = (int)$_POST['track_id'];
 $results  = $_POST['results']; // [position => pilot_id]
 
-$conn = new mysqli("localhost", "root", "", "sclr_2_0");
+$conn = new mysqli("localhost", "ujlfg9acjgmgu", "", "dbggshhbizolvg");
 if ($conn->connect_error) {
     die("DB connection failed");
 }

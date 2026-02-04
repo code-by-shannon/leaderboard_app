@@ -17,7 +17,7 @@ if (!isset($_GET['season_id']) || (int)$_GET['season_id'] <= 0) {
 $seasonId = (int)$_GET['season_id'];
 
 /* ---------- DB ---------- */
-$conn = new mysqli("localhost", "root", "", "SCLR_2_0");
+$conn = new mysqli("localhost", "ujlfg9acjgmgu", "", "dbggshhbizolvg");
 if ($conn->connect_error) {
     die("DB connection failed");
 }

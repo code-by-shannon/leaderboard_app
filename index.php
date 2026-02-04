@@ -6,9 +6,9 @@ session_start();
 
 /* ---- DB CONFIG ---- */
 $DB_HOST = "localhost";
-$DB_USER = "root";
+$DB_USER = "ujlfg9acjgmgu";
 $DB_PASS = "";
-$DB_NAME = "sclr_2_0";
+$DB_NAME = "dbggshhbizolvg";
 
 /* ---- CONNECT ---- */
 $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);

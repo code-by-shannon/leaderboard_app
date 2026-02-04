@@ -13,7 +13,7 @@ if ($seasonId <= 0 || $pilotId <= 0) {
     exit;
 }
 
-$conn = new mysqli("localhost", "root", "", "SCLR_2_0");
+$conn = new mysqli("localhost", "ujlfg9acjgmgu", "", "dbggshhbizolvg");
 
 $stmt = $conn->prepare("
     DELETE FROM season_pilots

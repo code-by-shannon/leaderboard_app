@@ -13,7 +13,8 @@ $userId   = $_SESSION['user_id'];
 $userName = $_SESSION['user_name'];
 
 /* ---- DB CONFIG ---- */
-$conn = new mysqli("localhost", "root", "", "sclr_2_0");
+$conn = new mysqli("localhost", "ujlfg9acjgmgu", "", "dbggshhbizolvg
+");
 if ($conn->connect_error) {
     die("Database connection failed");
 }
