@@ -4,11 +4,21 @@ error_reporting(E_ALL);
 
 session_start();
 
-/* ---- DB CONFIG ---- */
-$DB_HOST = "localhost";
-$DB_USER = "ujlfg9acjgmgu";
-$DB_PASS = "";
-$DB_NAME = "dbggshhbizolvg";
+// DB CONFIG 
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    // LOCAL
+    $DB_HOST = "localhost";
+    $DB_USER = "root";
+    $DB_PASS = "";
+    $DB_NAME = "sclr_2_0";
+} else {
+    // SITEGROUND
+    $DB_HOST = "localhost";
+    $DB_USER = "ujlfg9acjgmgu";
+    $DB_PASS = "YOUR_SITEGROUND_PASSWORD";
+    $DB_NAME = "dbggshhbizolvg";
+}
+
 
 /* ---- CONNECT ---- */
 $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
@@ -91,6 +101,16 @@ $conn->close();
         </section>
     </main>
 
+    <!-- Hidden modal for GUEST MODE-->
+<div id="guest-warning" class="guest-warning hidden">
+    <strong>Guest Mode (Beta)</strong><br>
+    Your data is stored in this browser only.<br>
+    Clearing cookies, using private browsing, or switching devices will reset your data.<br>
+    Account creation is coming later.<br>
+    <button id="dismiss-warning">Got it</button>
+</div>
+
+<script src="js/guest-warning.js"></script>
 </body>
 
 

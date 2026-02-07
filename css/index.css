@@ -91,3 +91,30 @@ body.page-index {
     margin-bottom: 1rem;
     color: #ff6b6b;
 }
+
+
+/*  GUEST USAGE MODAL */
+.guest-warning {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    max-width: 320px;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    z-index: 1000;
+}
+
+.guest-warning button {
+    margin-top: 10px;
+    background: #ffd966;
+    border: none;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}

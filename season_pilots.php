@@ -138,10 +138,11 @@ if ($seasonName === '') {
 <body>
 
 <nav>
-    <a href="/SCLR_2_0/dashboard.php">Dashboard</a> |
-    <a href="/SCLR_2_0/seasons.php">All Seasons</a> |
-    <a href="/SCLR_2_0/logout.php">Exit User</a>
+    <a href="/projects/SCLR_v_2_0/dashboard.php">Dashboard</a> 
+    <a href="/projects/SCLR_v_2_0/seasons.php">All Seasons</a> 
+    <a href="/projects/SCLR_v_2_0/logout.php">Exit User</a>
 </nav>
+
 
 <main>
   <div class="panel">
